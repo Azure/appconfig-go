@@ -1,3 +1,4 @@
+![Gopher Things](https://github.com/arschles/appconfig-go/workflows/Gopher%20Things/badge.svg)
 
 # Contributing
 
