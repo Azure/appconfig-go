@@ -8,11 +8,11 @@ import (
 // Client contains the endpoint, ID and Secret for accessing
 // Azure Client service.  Create with New()
 type Client struct {
-	Endpoint   string
-	ID         string
-	Secret     string
-	client     *http.Client
-	cfg *ClientConfig,
+	Endpoint string
+	ID       string
+	Secret   string
+	client   *http.Client
+	cfg      *ClientConfig
 }
 
 // New creates a new Client instance from the
@@ -21,11 +21,11 @@ func New(connectionString string, cfg *ClientConfig) *Client {
 
 	b, i, s := parseConnection(connectionString)
 	return &Client{
-		Endpoint:   b,
-		ID:         i,
-		Secret:     s,
-		client:     http.DefaultClient,
-		cfg: cfg,
+		Endpoint: b,
+		ID:       i,
+		Secret:   s,
+		client:   http.DefaultClient,
+		cfg:      cfg,
 	}
 }
 
