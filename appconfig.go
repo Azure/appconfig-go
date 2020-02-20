@@ -1,27 +1,39 @@
 package appconfig
 
 import (
+	"net/http"
 	"strings"
 )
 
-// AppConfig contains the endpoint, ID and Secret for accessing
-// Azure AppConfig service.  Create with New()
-type AppConfig struct {
+// Client contains the endpoint, ID and Secret for accessing
+// Azure Client service.  Create with New()
+type Client struct {
 	Endpoint string
 	ID       string
 	Secret   string
+	client   *http.Client
+	cfg      *ClientConfig
 }
 
-// New creates a new AppConfig instance from the
+// New creates a new Client instance from the
 // connection string provided in the Azure Portal.
-func New(connectionString string) *AppConfig {
+func New(connectionString string, cfg *ClientConfig) *Client {
 
 	b, i, s := parseConnection(connectionString)
-	return &AppConfig{
+	return &Client{
 		Endpoint: b,
 		ID:       i,
 		Secret:   s,
+		client:   http.DefaultClient,
+		cfg:      cfg,
 	}
+}
+
+// WithHTTPClient adds a pre-configured http.Client to the AppConfig
+// struct.
+func (a *Client) WithHTTPClient(c *http.Client) *Client {
+	a.client = c
+	return a
 }
 
 func parseConnection(cs string) (string, string, string) {
