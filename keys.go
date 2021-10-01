@@ -15,7 +15,12 @@ type GetKeysResponse struct {
 }
 
 func (a *Client) GetAllKeys() []string {
-	return []string{}
+	resp := a.FetchKeys()
+	keys := make([]string, 0)
+	for _, key := range resp.Items {
+		keys = append(keys, key.Name)
+	}
+	return keys
 }
 
 /*
