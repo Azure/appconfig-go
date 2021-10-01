@@ -21,12 +21,16 @@ func SignRequest(id string, secret string, req *http.Request) error {
 		pathAndQuery = pathAndQuery + "?" + req.URL.RawQuery
 	}
 
-	content, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		return err
+	var content []byte
+	if req.Body != nil {
+		content, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			return err
+		}
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(content))
+	} else {
+		content = make([]byte, 0)
 	}
-	req.Body = ioutil.NopCloser(bytes.NewBuffer(content))
-
 	key, err := base64.StdEncoding.DecodeString(secret)
 	if err != nil {
 		return err

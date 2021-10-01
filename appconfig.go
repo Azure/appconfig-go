@@ -1,6 +1,9 @@
 package appconfig
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -66,4 +69,39 @@ func parseConnection(cs string) (string, string, string) {
 
 	return endpoint, id, secret
 
+}
+
+type KeysResponseBody struct {
+	Items []Key
+}
+
+type Key struct {
+	Name string
+}
+
+func (a *Client) FetchKeys() KeysResponseBody {
+	endpoint := fmt.Sprintf("%s/keys?api-version=1.0", a.Endpoint)
+	req, err := http.NewRequest("GET", endpoint, nil)
+	if err != nil {
+		panic(err)
+	}
+	err = SignRequest(a.ID, a.Secret, req)
+	if err != nil {
+		panic(err)
+	}
+	resp, err := a.client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	keys := KeysResponseBody{}
+	err = json.Unmarshal(bodyBytes, &keys)
+	if err != nil {
+		panic(err)
+	}
+
+	return keys
 }
